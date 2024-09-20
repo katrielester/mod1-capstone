@@ -7,7 +7,7 @@ username=0
 filProd=[]
 listProduct=[]
 filCust={}
-
+total=0
 customer = {
     'user1': {
         'password':'abc123', 
@@ -496,7 +496,18 @@ def shopping():
  
 
 def checkOut():
-    print('Would you like to check out?')
+    print('Would you like to check out and continue to payment?')
+    while True:
+        coInput=input('Enter y/n:)')
+        if coInput=='n':
+            break
+        elif coInput=='y':
+
+            break
+        else:
+            print('Invalid input, please try again.')
+            continue
+
 
 # CREATE FUNCTIONS
 def createCustomer(uname,pw,name):
@@ -681,6 +692,7 @@ def filterCustomer(selection):
 # # # CART
 
 def printCart():
+    global total
     print('\n--- Shopping Cart ---')
     if (cart):
         header=['ID','Category','Name','Amount','Price','Total']
@@ -704,7 +716,9 @@ def printCart():
                 f"{items[2]:<10}\n "
             )
             i+=1
+            total+=items[2]
         print(productList)
+        print('Total purchase = Rp',total)
 
     else:
         print('Cart is empty.')

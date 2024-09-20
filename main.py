@@ -5,6 +5,7 @@ datetime.now().strftime('%d-%m-%Y')
 isAdmin=False
 username=0   
 filProd=[]
+listProduct=[]
 filCust={}
 
 customer = {
@@ -90,7 +91,7 @@ def find_index(dicts, key, value):
         if d.get(key, Null) == value:
             return i
     else:
-        raise ValueError('no dict with the key and value combination found')
+        return -999
     
 # MENU FUNCTIONS
 def menuAdmin():
@@ -134,10 +135,10 @@ def menuAdmin():
                       ''')
                 opt = int(input("Enter your choice: "))
                 if (opt==1):
-                    createMenu('customer')
+                    createMenu(True,'customer')
                     continue
                 elif (opt==2):
-                    createMenu('product')
+                    createMenu(True,'product')
                     continue
                 else:
                     break
@@ -161,18 +162,35 @@ def menuAdmin():
                 else:
                     break
             continue
-            continue
         elif (menu==4):
             # DELETE MENU
-
+            while True:
+                print('\nWhich data would you like to delete?')
+                print('''
+        1. Customer data\r
+        2. Product data\r
+        3. Back
+                      ''')
+                opt = int(input("Enter your choice: "))
+                if (opt==1):
+                    updateMenu('customer')
+                    continue
+                elif (opt==2):
+                    updateMenu('product')
+                    continue
+                else:
+                    break
             continue
         elif (menu==5):
             break
 
 def menuCustomer():
     while True:
-        print('\nWelcome to NewThreads!')
+        print('\n------------------------------------------------------------------------')
+        print('Welcome back to NewThreads, ',customer[username]['name'],'!')
+        print('------------------------------------------------------------------------')
         print(''' 
+What would you like to do?\r
     1. View my data\r
     2. Go to shop\r
     3. View shopping cart\r
@@ -222,19 +240,17 @@ def createMenu(admin,which):
     type='Customer' if which=='customer' else 'Product'
     if (admin==True):
         print('\n--- Create New ', type, ' ---')
-        print('Please enter values for the new ', type.lower())
+        print('Please enter values for the new ', type.lower(),':')
         if (which=='product'):
-            
             pName=(input('Product name: '))
             pCat=(input('Product category: '))
-            pStock=int(input('Product stock (numbers only): Rp'))
+            pStock=int(input('Product stock (numbers only): '))
             pPrice=int(input('Product price (numbers only): Rp'))
             createProduct(pName,pCat,pStock,pPrice)
             print('New product created.')
         else:
             # CREATE CUSTOMER
             while True:
-                print('Please enter your data: ')
                 cUname=(input('Customer username: '))
                 if cUname not in customer:
                     cPass=(input('Customer password: '))
@@ -265,14 +281,16 @@ def createMenu(admin,which):
 def readMenu(admin,which):
     # admin: Boolean, isAdmin
     # which: int, 1 for customer, 2 for product
+    global listProduct
     if admin==True:
         type='Customer' if which=='customer' else 'Product'
         print('\n',type,' data menu')
     else:
         print('\n--- NewThreads Product Catalogue ---')
 
-    if (which=='product'):
-        # READ PRODUCT MENU
+    if (which=='product') and (admin==True):
+        listProduct=product
+        # READ PRODUCT MENU --ADMIN
         print('''
     1. View all products
     2. View by category
@@ -283,18 +301,42 @@ def readMenu(admin,which):
         while True:
             rMenuInput=int(input('Enter your choice: '))
             if rMenuInput==1:
-                printProduct(product)
+                printProduct(listProduct)
                 break
             elif rMenuInput ==2:
                 selection='category'
-                filterProduct(selection)
+                filterProduct('category')
                 break
             elif rMenuInput ==3:
-                selection='best'
-                filterProduct(selection)
+                filterProduct('best')
+                break
             elif rMenuInput ==4:
-                selection='empty'
-                filterProduct(selection)
+                filterProduct('empty')
+                break
+            elif rMenuInput==5:
+                break
+    elif (which=='product') and (admin==False):
+        # READ PRODUCT MENU --CUSTOMER
+        # filter out products w/o stock
+        listProduct=list(filter(lambda filProd: filProd['stock'] >0, product))
+        print('''
+    1. View all products
+    2. View by category
+    3. View best-selling items
+    4. Back
+              ''')
+        while True:
+            rMenuInput=int(input('Enter your choice: '))
+            if rMenuInput==1:
+                printProduct(listProduct)
+                break
+            elif rMenuInput ==2:
+                selection='category'
+                filterProduct('category')
+                break
+            elif rMenuInput ==3:
+                filterProduct('best')
+                break
             elif rMenuInput==5:
                 break
     else:
@@ -335,54 +377,116 @@ def readMenu(admin,which):
 
 def updateMenu(which):
     # which: customer or product
+    update=True
     type='Customer' if which=='customer' else 'Product'
-    print('\n--- Create New ', type, ' ---')
-    print('Please enter values for the new ', type.lower())
+    print('\n--- Update ', type, ' ---')
+    print('Please enter the ID of the ',type.lower(),' you would like to update. ', )
+
     if (which=='product'):
-        pName=(input('Product name: '))
-        pCat=(input('Product category: '))
-        pStock=int(input('Product stock (numbers only): Rp'))
-        pPrice=int(input('Product price (numbers only): Rp'))
-        createProduct(pName,pCat,pStock,pPrice)
-        print('New product created.')
-    else:
-        # CREATE CUSTOMER
         while True:
-            print('Please enter your data: ')
-            cUname=(input('Customer username: '))
-            if cUname not in customer:
-                cPass=(input('Customer password: '))
-                cName=(input('Customer name: '))
-                createCustomer(cUname,cPass,cName)
-                print('New customer created.')
+            pID=int(input('Product ID: '))
+            idx=find_index(product,'prod_id',pID)
+            if idx!=-999: 
+                printProduct([product[find_index(product,'prod_id',pID)]])
+                print('''
+                    \nWhich attribute would you like to change?\n
+                1. Name
+                2. Category
+                3. Stock
+                4. Price
+                5. Cancel
+                    ''')
+                pAtt=int(input("Enter your choice:"))
+                while update:
+                    if pAtt==1:
+                        pKey='name'
+                        pValue=input(f'\nEnter the new product {pKey}: ')
+                        break
+                    elif pAtt==2:
+                        pKey='category'
+                        pValue=input(f'\nEnter the new product {pKey}: ')
+                        break
+                    elif pAtt==3:
+                        pKey='stock'
+                        pValue=int(input(f'\nEnter the new product {pKey}: '))
+                        break
+                    elif pAtt==4:
+                        pKey='price'
+                        pValue=int(input(f'\nEnter the new product {pKey}: '))
+                        break
+                    elif pAtt==5:
+                        update=False
+                        break
+                    else:
+                        print('Invalid value, please enter again.')
+                        continue
+                updateProduct(pID,pKey,pValue)
+                print('\nProduct has been updated to:')
+                printProduct([product[find_index(product,'prod_id',pID)]])
+                print('------------------------------------------------------------------------')
+
                 break
             else:
-                print('That username already exists, please choose another.')
-                continue  
+                break
+    else:
+        # UPDATE CUSTOMER
+        while True:
+            cID=int(input('Customer ID: '))
+            if cID in customer: 
+                printCustomer({cID:customer[username]})
+                print('''
+                    \nWhich attribute would you like to change?\n
+                1. Name
+                2. Password
+                3. Cancel
+                    ''')
+                cAtt=int(input("Enter your choice:"))
+                while update:
+                    if cAtt==1:
+                        cKey='name'
+                        cValue=input(f'\nEnter the new product {cKey}: ')
+                        break
+                    elif cAtt==2:
+                        cKey='password'
+                        cValue=input(f'\nEnter the new product {cKey}: ')
+                        break
+                    elif cAtt==3:
+                        update=False
+                        break
+                    else:
+                        print('Invalid value, please enter again.')
+                        continue
+                updateCustomer(cID,cKey,cValue)
+                print('\nProduct has been updated to:')
+                printCustomer({cID:customer[username]})
+                print('------------------------------------------------------------------------')
+
+                break
+            else:
+                break 
 
 def shopping():
     readMenu(False,'product')
     buy=True
-    if filProd:
-        productList=filProd
-    else:
-        productList=product
+    global listProduct
     while buy==True:
         print('\n Enter the index of the product you would like to buy, or enter "Q" if you would like to go back.')
         shopMenuInput=input('Index (or Q to cancel): ')
         if shopMenuInput in ('Q','q'):
             break
-        elif int(shopMenuInput)<=(len(productList)):
-            idx=int(shopMenuInput)
+        elif int(shopMenuInput)<=(len(listProduct)):
+            idx=int(shopMenuInput)-1
             # input not out of bond
             while True:
                 # check amount
                 buyAmt=int(input('Enter the amount you want to buy: '))
-                if buyAmt>productList[idx-1]['stock']:
-                    print('Not enough stock, ',productList[idx-1]['name'],' stock: ',productList[idx-1]['stock'],' left')
+                if buyAmt>listProduct[idx]['stock']:
+                    print('Not enough stock, ',listProduct[idx]['name'],' stock: ',listProduct[idx]['stock'],' left')
                     continue
                 else:
-                    addToCart(productList[idx-1]['prod_id'],buyAmt)
+                    # print(idx)
+                    # print(listProduct[idx]['name'])
+                    addToCart(listProduct[idx]['prod_id'],buyAmt)
                     printCart()
                     buy=False
                     break
@@ -462,12 +566,11 @@ def printCustomer(dict1):
 
 ## PRODUCT
 def printProduct(list1):
+    head=['Index','ID','Category','Name','Stock','Sold','Price']
+    productlist= (f" {head[0]:<8} | ") if isAdmin==False else (f" {head[1]:<3} | ")
     if (list1):
-        head=['Index','ID','Category','Name','Stock','Sold','Price']
         i=0
-        productlist = (
-            f" {head[0]:<8} | "
-            # f"{head[1]:<3} | "
+        productlist += (
             f"{head[2]:<10} | "
             f"{head[3]:<25} | "
             f"{head[4]:<5} | "
@@ -475,9 +578,8 @@ def printProduct(list1):
             f"{head[6]:<10}\n "
         )
         for items in list1:
+            productlist += (f"{i+1:<8} | ") if isAdmin==False else (f"{items['prod_id']:<3} | ")
             productlist += (
-                f"{i+1:<8} | "
-                # f"{items['prod_id']:<3} | "
                 f"{items['category']:<10} | "
                 f"{items['name']:<25} | "
                 f"{items['stock']:<5} | "
@@ -486,12 +588,13 @@ def printProduct(list1):
             )
             i+=1
         print(productlist)
-        print(i,' products displayed\n')
+        print(i,' product(s) displayed')
     else:
         print('Data is empty.')
         
 # # FILTER
 def filterProduct(selection):
+    global listProduct
     if selection=='category':
         while True:
             print('\nWhich category would you like to view?\n')
@@ -502,11 +605,11 @@ def filterProduct(selection):
                   ''')
             in_cat=int(input('Enter your choice: '))
             if in_cat==1:
-                filProd=list(filter(lambda filProd: filProd['category'] == 'Dresses', product))
+                filProd=list(filter(lambda filProd: filProd['category'] == 'Dresses', listProduct))
                 printProduct(filProd)
                 break
             elif in_cat==2:
-                filProd=list(filter(lambda filProd: filProd['category'] == 'Tops', product))
+                filProd=list(filter(lambda filProd: filProd['category'] == 'Tops', listProduct))
                 printProduct(filProd)
                 break
             elif in_cat==3:
@@ -520,11 +623,12 @@ def filterProduct(selection):
             if item['stock']>0:
                 total+=item['sold']
         avg=total//len(product)
-        filProd=list(filter(lambda filProd: filProd['sold'] >= avg, product))
+        filProd=list(filter(lambda filProd: filProd['sold'] >= avg, listProduct))
         printProduct(filProd)
     elif selection=='empty':
-        filProd=list(filter(lambda filProd: filProd['stock'] == 0, product))
+        filProd=list(filter(lambda filProd: filProd['stock'] == 0, listProduct))
         printProduct(filProd)
+    listProduct=filProd
 
 
 
@@ -579,9 +683,9 @@ def filterCustomer(selection):
 def printCart():
     print('\n--- Shopping Cart ---')
     if (cart):
-        header=['Product ID','Category','Name','Amount','Price','Total']
+        header=['ID','Category','Name','Amount','Price','Total']
         productList = (
-                f" {header[0]:<8} | "
+                f" {header[0]:<3} | "
                 f"{header[1]:<10} | "
                 f"{header[2]:<25} | "
                 f"{header[3]:<8} | "
@@ -592,7 +696,7 @@ def printCart():
             idx=find_index(product,'prod_id',items[0])
             i=0
             productList += (
-                f"{product[idx]['prod_id']:<8} | "
+                f"{product[idx]['prod_id']:<3} | "
                 f"{product[idx]['category']:<10} | "
                 f"{product[idx]['name']:<25} | "
                 f"{items[1]:<7}x | "
@@ -630,6 +734,23 @@ def updateProductBuy(idx,amt,type):
         product[idx]['stock']+=amt
     elif (type=='paid'):
         product[idx]['sold']+=amt
+
+# DELETE FUNCTIONS
+## DELETE CUSTOMER
+def deleteCustomer(uname):
+    print('''
+          \n=== WARNING! ===\n
+          Are you sure you would like to delete this customer? This data will be deleted permanently.
+          ''')
+    while True:
+        delOpt=input('Delete this customer? (y/n)')
+        if delOpt in ('y','Y'):
+            break
+        elif delOpt in ('n','N'):
+            break
+## DELETE PRODUCT
+def deleteProduct():
+    print()
 
 
 ## CUSTOMER ACCESS

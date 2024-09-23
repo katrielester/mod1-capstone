@@ -1,9 +1,13 @@
-# mod1-capstone
-Project
-Login as an existing user
-username: user1 to user4
+# Module 1 Capstone Project
+
+## To login as an existing user
+
+username: user1
+
 password: abc123
 
-Login as admin
+## To login as admin
+
 username: admin
+
 password: admin

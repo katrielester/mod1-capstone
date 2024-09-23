@@ -208,7 +208,7 @@ product = [
      'price':559000
      },
      {'prod_id':19,
-     'name':'Peplum COllar Shirt',
+     'name':'Peplum Collar Shirt',
      'category':'Dresses',
      'stock':100,
      'sold':35,
@@ -427,7 +427,7 @@ def menuCart():
     global isBuying
     printCart()
     if cart:
-        print('''Would you like to:\r
+        print('''\nWould you like to:\r
         1. Check out\r
         2. Clear shopping cart\r
         3. Exit
@@ -906,6 +906,7 @@ def deleteMenu(which):
         else:
             break
 
+## FUNCTIONS FOR SHOPPING
 def shopping():
     global isBuying
     global listProduct
@@ -944,7 +945,6 @@ def shopping():
             else:
                 print('Invalid input, please try again.\n')
                 continue
- 
 
 def checkOut():
     global total
@@ -957,6 +957,7 @@ def checkOut():
             isBuying=False
             break
         elif coInput in('Y'',y'):
+            print('\n----------------------------------- Check Out ------------------------------------\n')
             while True:
                 pay= (input('Enter the amount of money (numbers only): Rp '))
                 if pay.isdigit():
@@ -985,7 +986,26 @@ def checkOut():
             print('Invalid input, please try again.')
             continue
 
-
+def addToCart(p_id,amt):
+    global total
+    exist=False
+    idx=find_index(product,'prod_id',p_id)
+    price=product[idx]['price']
+    if cart:
+        for item in cart:
+            if item[0]==p_id:
+                exist=True
+                break
+        if exist:
+            item[1]+=amt
+            item[2]+=(price*amt)
+        else:
+            cart.append([p_id,amt,(price*amt)])
+    else:
+        cart.append([p_id,amt,(price*amt)])
+    total+=price*amt
+    updateProductBuy(idx,amt,'cart')
+    
 # CREATE FUNCTIONS
 def createCustomer(uname,pw,name):
     customer[uname]={
@@ -1299,29 +1319,7 @@ Are you sure you would like to delete this {type}? This data will be deleted per
     return delete
 
 
-## CUSTOMER ACCESS
-### CART
-def addToCart(p_id,amt):
-    global total
-    exist=False
-    idx=find_index(product,'prod_id',p_id)
-    price=product[idx]['price']
-    if cart:
-        for item in cart:
-            if item[0]==p_id:
-                exist=True
-                break
-        if exist:
-            item[1]+=amt
-            item[2]+=(price*amt)
-        else:
-            cart.append([p_id,amt,(price*amt)])
-    else:
-        cart.append([p_id,amt,(price*amt)])
-    total+=price*amt
-    updateProductBuy(idx,amt,'cart')
-
-#  MAIN
+#  MAIN PROGRAM
 
 # Login
 while True:
@@ -1376,4 +1374,3 @@ while True:
     else:
         print('Invalid input, please try again.\n')
         continue
-    

@@ -430,7 +430,7 @@ def menuCart():
         print('''\nWould you like to:\r
         1. Check out\r
         2. Clear shopping cart\r
-        3. Exit
+        3. Continue
     ''')
         while True:
             cMenuInput=input('Enter your choice: ')
@@ -471,7 +471,7 @@ def createMenu(admin,which):
                 pStock=(input('Product stock (numbers only)    :'))
                 pPrice=(input('Product price (numbers only)    : Rp'))
                 if pStock.isdigit() and pPrice.isdigit():
-                    createProduct(pName,pCat,pStock,pPrice)
+                    createProduct(pName,pCat,int(pStock),int(pPrice))
                     print('New product created.\n')
                     break
                 else:
@@ -591,7 +591,7 @@ By what category would you like to sort the products?
     elif (which=='product') and (admin==False):
         # READ PRODUCT MENU --CUSTOMER
         # filter out products w/o stock
-        listProduct=list(filter(lambda filProd: filProd['stock'] >0, product))
+        listProduct=list(filter(lambda filProd: int(filProd['stock']) >0, product))
         print('''
     1. View all products
     2. View by category
@@ -1084,7 +1084,7 @@ def printProduct(list1):
         i=0
         productlist += (
             f"{head[2]:<10} | "
-            f"{head[3]:<30} | "
+            f"{head[3]:<35} | "
             f"{head[4]:<5} | "
             f"{head[5]:<5} | "
             f"{head[6]:<10}\n "
@@ -1093,7 +1093,7 @@ def printProduct(list1):
             productlist += (f"{i+1:<5} | ") if isAdmin==False else (f"{items['prod_id']:<3} | ")
             productlist += (
                 f"{items['category']:<10} | "
-                f"{items['name']:<30} | "
+                f"{items['name']:<35} | "
                 f"{items['stock']:<5} | "
                 f"{items['sold']:<5} | "
                 f"{items['price']:<10}\n "
@@ -1243,7 +1243,7 @@ def printCart():
         productList = (
                 f" {header[0]:<3} | "
                 f"{header[1]:<10} | "
-                f"{header[2]:<25} | "
+                f"{header[2]:<35} | "
                 f"{header[3]:<8} | "
                 f"{header[4]:<10} | "
                 f"{header[5]:<10}\n "
@@ -1254,7 +1254,7 @@ def printCart():
                 # f"{product[idx]['prod_id']:<3} | "
                 f"{i:<3} | "
                 f"{product[idx]['category']:<10} | "
-                f"{product[idx]['name']:<25} | "
+                f"{product[idx]['name']:<35} | "
                 f"{items[1]:<7}x | "
                 f"{product[idx]['price']:<10} | "
                 f"{items[2]:<10}\n "

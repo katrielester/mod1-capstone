@@ -24,29 +24,59 @@ customer = {
         'name':'Obiwan', 
         'date_joined':'2021-01-01',
         'transactions':[100000,20000]},
-    'user2': {
+    'organa': {
         'password':'abc123', 
         'name':'Leia', 
-        'date_joined':'2020-02-01',
+        'date_joined':'2022-02-11',
         'transactions':[400000]},
-    'user3': { 
+    'skywalker': { 
         'password':'abc123', 
         'name':'Anakin', 
-        'date_joined':'2023-09-27',
+        'date_joined':'2023-12-18',
         'transactions':[]},
-    'user4': {
+    'amidala': {
         'password':'abc123', 
         'name':'Padme',
-        'date_joined':'2023-09-21',
-        'transactions':[50000000,1000000]}
+        'date_joined':'2020-11-1',
+        'transactions':[100000,1200000]},
+    'ned': {
+        'password':'abc123', 
+        'name':'Ned Stark',
+        'date_joined':'2022-09-21',
+        'transactions':[]},
+    'dany': {
+        'password':'abc123', 
+        'name':'Daenerys',
+        'date_joined':'2020-09-1',
+        'transactions':[100000,300000,299900,599900]},
+    'runin': {
+        'password':'abc123', 
+        'name':'Rin',
+        'date_joined':'2019-04-15',
+        'transactions':[]},
+    'venus': {
+        'password':'abc123', 
+        'name':'Aphrodite',
+        'date_joined':'2022-04-21',
+        'transactions':[1999900,2999900,5999900]},
+    'mars': {
+        'password':'abc123', 
+        'name':'Ares',
+        'date_joined':'2022-09-10',
+        'transactions':[100000,100000,100000,100000,100000]},
+    'neptune': {
+        'password':'abc123', 
+        'name':'Poseidon',
+        'date_joined':'2021-03-10',
+        'transactions':[50000000,1000000]} 
+        
     }
 
 product = [
-    # Dresses
     {'prod_id':0,
      'name':'Mini Dress with Zip',
      'category':'Dresses',
-     'stock':12345,
+     'stock':225,
      'sold':142,
      'price':799900
      },
@@ -60,8 +90,8 @@ product = [
      {'prod_id':2,
      'name':'White Maxi Dress',
      'category':'Dresses',
-     'stock':1010,
-     'sold':999,
+     'stock':101,
+     'sold':199,
      'price':1099000
      },
     {'prod_id':3,
@@ -82,7 +112,7 @@ product = [
      'name':'Ribbed Polo Neck T-Shirt',
      'category':'Tops',
      'stock':0,
-     'sold':1500,
+     'sold':720,
      'price':4999000
      },
      {'prod_id':6,
@@ -90,6 +120,98 @@ product = [
      'category':'Dresses',
      'stock':100,
      'sold':25,
+     'price':999900
+     },
+     {'prod_id':7,
+     'name':'Pink Sweater',
+     'category':'Tops',
+     'stock':199,
+     'sold':19,
+     'price':399000
+     },
+     {'prod_id':8,
+     'name':'Polkadot Mini Dress',
+     'category':'Dresses',
+     'stock':19,
+     'sold':295,
+     'price':1999900
+     },
+     {'prod_id':9,
+     'name':'Fitted Off Shoulder Knit TOp',
+     'category':'Tops',
+     'stock':299,
+     'sold':55,
+     'price':499900
+     },
+
+     {'prod_id':10,
+     'name':'Belted Tube Top',
+     'category':'Tops',
+     'stock':199,
+     'sold':0,
+     'price':299900
+     },
+     {'prod_id':11,
+     'name':'Abstract Satin Bias Cut Midi Dress',
+     'category':'Dresses',
+     'stock':199,
+     'sold':101,
+     'price':999900
+     },
+     {'prod_id':12,
+     'name':'Tailored Blazer Dress',
+     'category':'Dresses',
+     'stock':190,
+     'sold':10,
+     'price':1999900
+     },
+     {'prod_id':13,
+     'name':'Halter Bias Cut Midi Dress',
+     'category':'Dresses',
+     'stock':910,
+     'sold':190,
+     'price':699900
+     },
+     {'prod_id':14,
+     'name':'Knit Boat Neck Shift Mini Dress',
+     'category':'Dresses',
+     'stock':65,
+     'sold':105,
+     'price':650000
+     },
+     {'prod_id':15,
+     'name':'Pleated Boat Neck Crop Top',
+     'category':'Tops',
+     'stock':61,
+     'sold':475,
+     'price':459900
+     },
+     {'prod_id':16,
+     'name':'Shoulder Padded V-neck Top',
+     'category':'Tops',
+     'stock':488,
+     'sold':8,
+     'price':599900
+     },
+     {'prod_id':17,
+     'name':'Tweed Blouse',
+     'category':'Tops',
+     'stock':383,
+     'sold':120,
+     'price':650900
+     },
+     {'prod_id':18,
+     'name':'Polka Dot Tiered Sleeve Top',
+     'category':'Dresses',
+     'stock':6,
+     'sold':450,
+     'price':559000
+     },
+     {'prod_id':19,
+     'name':'Peplum COllar Shirt',
+     'category':'Dresses',
+     'stock':100,
+     'sold':35,
      'price':999900
      },
 ]
@@ -942,7 +1064,7 @@ def printProduct(list1):
         i=0
         productlist += (
             f"{head[2]:<10} | "
-            f"{head[3]:<25} | "
+            f"{head[3]:<30} | "
             f"{head[4]:<5} | "
             f"{head[5]:<5} | "
             f"{head[6]:<10}\n "
@@ -951,7 +1073,7 @@ def printProduct(list1):
             productlist += (f"{i+1:<5} | ") if isAdmin==False else (f"{items['prod_id']:<3} | ")
             productlist += (
                 f"{items['category']:<10} | "
-                f"{items['name']:<25} | "
+                f"{items['name']:<30} | "
                 f"{items['stock']:<5} | "
                 f"{items['sold']:<5} | "
                 f"{items['price']:<10}\n "

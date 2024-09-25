@@ -546,6 +546,7 @@ def readMenu(admin,which):
                 filterProduct('empty')
                 break
             elif rMenuInput==5:
+                # SORT
                 while True:
                     listProduct=product
                     print('''--------------------------------- Sort Products ----------------------------------\n
@@ -698,10 +699,12 @@ By what category would you like to sort the products?
                         break
                 break
             elif rMenuInput in (3,4):
+                # FILTER
                 selection='join' if rMenuInput==3 else 'trans'
                 filterCustomer(selection)
                 break
             elif rMenuInput==5:
+                # SORT
                 while True:
                     print('''--- SORT CUSTOMERS ---\n
 By what category would you like to sort the customers?
@@ -758,7 +761,7 @@ def updateMenu(which):
     if (which=='product'):
         while update==True:
             pID=(input('Product ID: '))
-            idx=find_index(product,'prod_id',pID)
+            idx=find_index(product,'prod_id',int(pID))
             if idx!=-999: 
                 pID=int(pID)
                 printOneProduct(pID)
@@ -771,7 +774,7 @@ def updateMenu(which):
     5. Cancel
                     ''')
                 pAtt=(input("Enter your choice: "))
-                pAtt=int(pAtt) if pAtt.isidigit() else pAtt
+                pAtt=int(pAtt) if pAtt.isdigit() else pAtt
                 while update:
                     if pAtt==1:
                         pKey='name'
@@ -1147,7 +1150,7 @@ def filterProduct(selection):
         listProduct=list(filter(lambda filProd: filProd['stock'] == 0, listProduct))
         printProduct(listProduct)
     # listProduct=filProd
-
+    
 def filterCustomer(selection):
     filCust={}
     if selection=='join':

@@ -213,7 +213,7 @@ product = [
      'stock':100,
      'sold':35,
      'price':999900
-     },
+     }
 ]
 
 cart = []
